@@ -3,20 +3,23 @@ package com.evento.evento.entities;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "evento")  // Opcional, caso o nome da tabela seja diferente do nome da classe
+@Table(name = "evento")
 public class Evento {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String nomeEvento;
     private String descricaoEvento;
-    private LocalDateTime dataEvento;
+    private OffsetDateTime dataEvento;
 
-    // Getters e Setters
     public Integer getId() {
         return id;
     }
@@ -41,11 +44,11 @@ public class Evento {
         this.descricaoEvento = descricaoEvento;
     }
 
-    public LocalDateTime getDataEvento() {
+    public OffsetDateTime getDataEvento() {
         return dataEvento;
     }
 
-    public void setDataEvento(LocalDateTime dataEvento) {
+    public void setDataEvento(OffsetDateTime dataEvento) {
         this.dataEvento = dataEvento;
     }
 }

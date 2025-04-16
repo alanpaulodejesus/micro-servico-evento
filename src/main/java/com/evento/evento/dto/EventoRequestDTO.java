@@ -2,10 +2,9 @@ package com.evento.evento.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
-public record EventoRequestDTO(Integer id,
-                               String nomeEvento,
-                               String descricaoEvento,  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-                               LocalDateTime dataEvento) {
+public record EventoRequestDTO(String nomeEvento,
+                               String descricaoEvento, @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC")
+                               OffsetDateTime dataEvento) {
 }
