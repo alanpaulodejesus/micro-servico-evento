@@ -6,6 +6,8 @@ import jakarta.persistence.Table;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 @Entity
@@ -18,7 +20,7 @@ public class Evento {
 
     private String nomeEvento;
     private String descricaoEvento;
-    private OffsetDateTime dataEvento;
+    private LocalDate dataEvento;
 
     public Integer getId() {
         return id;
@@ -44,11 +46,11 @@ public class Evento {
         this.descricaoEvento = descricaoEvento;
     }
 
-    public OffsetDateTime getDataEvento() {
+    public LocalDate getDataEvento() {
         return dataEvento;
     }
 
-    public void setDataEvento(OffsetDateTime dataEvento) {
+    public void setDataEvento(LocalDate dataEvento) {
         this.dataEvento = dataEvento;
     }
 }
