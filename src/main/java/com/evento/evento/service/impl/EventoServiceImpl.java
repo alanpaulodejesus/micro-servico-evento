@@ -1,6 +1,7 @@
 package com.evento.evento.service.impl;
 
 import com.evento.evento.dto.EventoRequestDTO;
+import com.evento.evento.dto.EventoResponseDTO;
 import com.evento.evento.entities.Evento;
 import com.evento.evento.mappers.EventoMapper;
 import com.evento.evento.repositories.EventoRepository;
@@ -16,9 +17,10 @@ public class EventoServiceImpl implements EventoService {
     private EventoRepository eventoRepository;
 
     @Override
-    public Evento criarEvento(EventoRequestDTO dto) {
+    public EventoResponseDTO criarEvento(EventoRequestDTO dto) {
         Evento evento = EventoMapper.toEventoEntity(dto);
-        return eventoRepository.save(evento);
+        Evento salvo = eventoRepository.save(evento);
+        return EventoMapper.toEventoResponseDTO(salvo);
     }
 
 //

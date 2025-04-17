@@ -8,7 +8,6 @@ public class EventoMapper {
 
     public static Evento toEventoEntity(EventoRequestDTO dto) {
         Evento evento = new Evento();
-        //evento.setId(dto.id());
         evento.setNomeEvento(dto.nomeEvento());
         evento.setDescricaoEvento(dto.descricaoEvento());
         evento.setDataEvento(dto.dataEvento());

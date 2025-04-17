@@ -1,11 +1,9 @@
 package com.evento.evento.service;
 
 import com.evento.evento.dto.EventoRequestDTO;
-import com.evento.evento.entities.Evento;
-import org.springframework.stereotype.Service;
+import com.evento.evento.dto.EventoResponseDTO;
 
-@Service
+
 public interface EventoService {
-     Evento criarEvento(EventoRequestDTO dto);
-
+     EventoResponseDTO criarEvento(EventoRequestDTO dto);
 }
