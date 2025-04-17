@@ -20,9 +20,7 @@ public class EventoController {
 
     @PostMapping
     public ResponseEntity<EventoResponseDTO> criarEvento(@RequestBody EventoRequestDTO eventoRequestDTO) {
-
-        Evento eventoEntities = eventoService.criarEvento(eventoRequestDTO);
-        EventoResponseDTO eventoResponseDTO = EventoMapper.toEventoResponseDTO(eventoEntities);
+        EventoResponseDTO eventoResponseDTO = eventoService.criarEvento(eventoRequestDTO);
         return ResponseEntity.ok(eventoResponseDTO);
     }
 
