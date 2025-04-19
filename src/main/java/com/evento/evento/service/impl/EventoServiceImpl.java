@@ -3,11 +3,15 @@ package com.evento.evento.service.impl;
 import com.evento.evento.dto.EventoRequestDTO;
 import com.evento.evento.dto.EventoResponseDTO;
 import com.evento.evento.entities.Evento;
+import com.evento.evento.exception.DataEventoInvalidaException;
+import com.evento.evento.exception.KeyMessages;
 import com.evento.evento.mappers.EventoMapper;
 import com.evento.evento.repositories.EventoRepository;
 import com.evento.evento.service.EventoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 
 @Service
@@ -18,6 +22,9 @@ public class EventoServiceImpl implements EventoService {
 
     @Override
     public EventoResponseDTO criarEvento(EventoRequestDTO dto) {
+        if (dto.dataEvento().isBefore( LocalDate.now())) {
+            throw new DataEventoInvalidaException( KeyMessages.DATA_INVALIDA_PASSED.getValue());
+        }
         Evento evento = EventoMapper.toEventoEntity(dto);
         Evento salvo = eventoRepository.save(evento);
         return EventoMapper.toEventoResponseDTO(salvo);

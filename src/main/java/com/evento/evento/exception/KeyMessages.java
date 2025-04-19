@@ -1,10 +1,7 @@
 package com.evento.evento.exception;
 
 public enum KeyMessages {
-    PLACA_NOT_FOUND("Placa não encontrada."),
-    VEICULO_JA_ESTA_ESTACIONADO("Veiculo não possui saída para uma entrada cadastrada."),
-    VEICULO_JA_SAIU("Veiculo não possui entrada cadastrada."),
-    TIPO_DE_VEICULO_NAO_CADASTRADO("Tipo de veículo não cadastrado.");
+    DATA_INVALIDA_PASSED("A data do evento não pode ser menor que a data atual.");
 
     String value;
 
