@@ -6,6 +6,7 @@ import jakarta.persistence.Table;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
@@ -16,9 +17,11 @@ public class Evento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    @NotNull
     private String nomeEvento;
+    @NotNull
     private String descricaoEvento;
+    @NotNull
     private LocalDate dataEvento;
 
     public Integer getId() {
