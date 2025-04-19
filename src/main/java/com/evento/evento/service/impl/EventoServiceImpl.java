@@ -10,6 +10,7 @@ import com.evento.evento.repositories.EventoRepository;
 import com.evento.evento.service.EventoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 
@@ -22,8 +23,14 @@ public class EventoServiceImpl implements EventoService {
 
     @Override
     public EventoResponseDTO criarEvento(EventoRequestDTO dto) {
-        if (dto.dataEvento().isBefore( LocalDate.now())) {
-            throw new DataEventoInvalidaException( KeyMessages.DATA_INVALIDA_PASSED.getValue());
+        if (dto.dataEvento() == null ) {
+            throw new DataEventoInvalidaException(KeyMessages.DATA_OBRIGATORIA );
+        }if (dto.dataEvento().isBefore( LocalDate.now())) {
+            throw new DataEventoInvalidaException(KeyMessages.DATA_INVALIDA_MENOR_ATUAL );
+        } if (dto.nomeEvento() == null || !StringUtils.hasText(dto.nomeEvento())) {
+            throw new DataEventoInvalidaException(KeyMessages.NOME_EVENTO_OBRIGATORIO);
+        } if (dto.descricaoEvento() == null || !StringUtils.hasText(dto.descricaoEvento())) {
+            throw new DataEventoInvalidaException(KeyMessages.DESCRICAO_EVENTO_OBRIGATORIO);
         }
         Evento evento = EventoMapper.toEventoEntity(dto);
         Evento salvo = eventoRepository.save(evento);
