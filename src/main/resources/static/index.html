@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Eventos</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+</head>
+<body class="container">
+<h3 class="center-align">Agenda de Eventos</h3>
+
+<form id="eventoForm">
+    <div class="input-field">
+        <input id="nomeEvento" type="text" required>
+        <label for="nomeEvento">Nome do Evento</label>
+    </div>
+
+    <div class="input-field">
+        <input id="descricaoEvento" type="text" required>
+        <label for="descricaoEvento">Descrição</label>
+    </div>
+
+    <div class="input-field">
+        <input id="dataEvento" type="date" required>
+        <label class="active" for="dataEvento">Data do Evento</label>
+    </div>
+
+    <button class="btn waves-effect waves-light" id="campoCriarEvento"  type="submit">Criar Evento</button>
+</form>
+
+<div id="resposta" class="section"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>
