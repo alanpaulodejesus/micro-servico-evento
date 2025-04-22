@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/evento")
 public class EventoController {
@@ -25,17 +27,10 @@ public class EventoController {
         return ResponseEntity.ok(eventoResponseDTO);
     }
 
-//    @GetMapping("/{placa}")
-//    public ResponseEntity<List<ParquimetroResponseDTO>> getByPlaca(@PathVariable String placa){
-//        final List<RegistroParquimetro> registroParquimetros = parquimetroServiceImpl.getByPlaca(placa);
-//        final List<ParquimetroResponseDTO> responseDTOS = registroParquimetros.stream().map(ParquimetroMapper::saidaDoEstacionamento).collect(Collectors.toList());
-//        return ResponseEntity.ok(responseDTOS);
-//    }
-//
-//    @PostMapping("/{placa}/sair")
-//    public ResponseEntity<ParquimetroResponseDTO> sair(@PathVariable String placa, ParquimetroRequestDTO parquimetroRequestDTO) {
-//        final RegistroParquimetro registroParquimetro = parquimetroServiceImpl.sair(parquimetroRequestDTO);
-//        return ResponseEntity.ok(ParquimetroMapper.saidaDoEstacionamento(registroParquimetro));
-//    }
+    @GetMapping
+    public ResponseEntity<List<EventoResponseDTO>> listarEventos() {
+        List<EventoResponseDTO> eventos = eventoService.listarEventos();
+        return ResponseEntity.ok(eventos);
+    }
 
 }

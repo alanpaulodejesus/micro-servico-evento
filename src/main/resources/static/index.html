@@ -2,35 +2,137 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Eventos</title>
+    <title>Cadastro de Evento</title>
+    <!-- Import Materialize CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
-<body class="container">
-<h3 class="center-align">Agenda de Eventos</h3>
+<body>
 
-<form id="eventoForm">
-    <div class="input-field">
-        <input id="nomeEvento" type="text" required>
-        <label for="nomeEvento">Nome do Evento</label>
-    </div>
+<div class="container">
+    <h3 class="center-align">Cadastrar Evento</h3>
 
-    <div class="input-field">
-        <input id="descricaoEvento" type="text" required>
-        <label for="descricaoEvento">Descrição</label>
-    </div>
+    <!-- Formulário -->
+    <form id="eventoForm" class="card-panel">
+        <div class="input-field">
+            <input id="nomeEvento" type="text" required>
+            <label for="nomeEvento">Nome do Evento</label>
+        </div>
 
-    <div class="input-field">
-        <input id="dataEvento" type="date" required>
-        <label class="active" for="dataEvento">Data do Evento</label>
-    </div>
+        <div class="input-field">
+            <textarea id="descricaoEvento" class="materialize-textarea" required></textarea>
+            <label for="descricaoEvento">Descrição do Evento</label>
+        </div>
 
-    <button class="btn waves-effect waves-light" id="campoCriarEvento"  type="submit">Criar Evento</button>
-</form>
+        <div class="input-field">
+            <input id="dataEvento" type="date" required>
+            <label class="active" for="dataEvento">Data do Evento</label>
+        </div>
 
-<div id="resposta" class="section"></div>
+        <button type="submit" class="btn waves-effect waves-light">Criar Evento</button>
+    </form>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Área de resposta -->
+    <div id="mensagem"></div>
+
+    <!-- Lista de eventos -->
+    <h4 class="center-align">Eventos Cadastrados</h4>
+    <ul id="listaEventos" class="collection z-depth-1"></ul>
+</div>
+
+<!-- Import Materialize JS & jQuery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script src="/js/app.js"></script>
+<script>
+    // Função para carregar eventos do backend
+    function carregarEventos() {
+        fetch('/evento')
+            .then(res => res.json())
+            .then(data => {
+                const lista = document.getElementById('listaEventos');
+                lista.innerHTML = '';
+
+                if (data.length === 0) {
+                    lista.innerHTML = '<li class="collection-item">Nenhum evento cadastrado.</li>';
+                    return;
+                }
+
+                data.forEach(evento => {
+                    const item = `
+                        <li class="collection-item">
+                            <strong>${evento.nomeEvento}</strong><br>
+                            ${evento.descricaoEvento}<br>
+                            <em>${evento.dataEvento}</em>
+                        </li>`;
+                    lista.innerHTML += item;
+                });
+            })
+            .catch(err => console.error('Erro ao carregar eventos:', err));
+    }
+
+    // Função para exibir a mensagem com fade out
+    function exibirMensagem(texto, sucesso = true) {
+        const mensagemDiv = document.getElementById('mensagem');
+        const cor = sucesso ? 'green' : 'red';
+
+        // Limpa qualquer mensagem anterior
+        mensagemDiv.innerHTML = '';
+
+        // Cria nova div da mensagem
+        const div = document.createElement('div');
+        div.className = `card-panel ${cor} lighten-4`;
+        div.innerHTML = `<span class="${cor}-text text-darken-4">${texto}</span>`;
+        mensagemDiv.appendChild(div);
+
+        // Remove após 4 segundos com fade out
+        setTimeout(() => {
+            div.style.opacity = '1';
+            let op = 1;
+            const fadeOut = setInterval(() => {
+                if (op <= 0.1) {
+                    clearInterval(fadeOut);
+                    div.remove();
+                }
+                div.style.opacity = op;
+                div.style.transition = 'opacity 0.3s';
+                op -= 0.1;
+            }, 30);
+        }, 4000);
+    }
+
+    // Ao carregar a página
+    document.addEventListener('DOMContentLoaded', () => {
+        carregarEventos();
+    });
+
+    // Envio do formulário
+    document.getElementById('eventoForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const nomeEvento = document.getElementById('nomeEvento').value;
+        const descricaoEvento = document.getElementById('descricaoEvento').value;
+        const dataEvento = document.getElementById('dataEvento').value;
+
+        fetch('/evento', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nomeEvento, descricaoEvento, dataEvento })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error("Erro ao criar evento");
+            return response.json();
+        })
+        .then(() => {
+            // Chama a função para exibir a mensagem
+            exibirMensagem('Evento criado com sucesso!', true);
+            document.getElementById('eventoForm').reset();
+            carregarEventos();
+        })
+        .catch(error => {
+            // Chama a função para exibir a mensagem de erro
+            exibirMensagem(`Erro: ${error.message}`, false);
+        });
+    });
+</script>
+
 </body>
 </html>
