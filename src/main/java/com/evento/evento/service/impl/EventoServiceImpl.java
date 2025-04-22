@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -37,16 +39,14 @@ public class EventoServiceImpl implements EventoService {
         return EventoMapper.toEventoResponseDTO(salvo);
     }
 
-//
-//    @Override
-//    @Cacheable(value = "registroParquimetroPorPlaca", key = "#placa")
-//    public List<RegistroParquimetro> getByPlaca(String placa) {
-//        Optional<List<RegistroParquimetro>> todosRegistros = parquimetroRepository.findAllByVeiculoPlaca(placa);
-//        if(todosRegistros.isPresent()){
-//            return todosRegistros.get();
-//        }
-//        throw new NotFoundException(KeyMessages.PLACA_NOT_FOUND.getValue());
-//    }
+    @Override
+    public List <EventoResponseDTO> listarEventos() {
+        return eventoRepository.findAll()
+                .stream()
+                .map(EventoMapper::toEventoResponseDTO)
+                .collect( Collectors.toList());
+    }
+
 //
 //    @Transactional
 //    @CacheEvict(value = "registroParquimetroPorPlaca", key = "#dto.placa", allEntries = false)
