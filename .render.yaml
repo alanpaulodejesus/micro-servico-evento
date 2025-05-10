@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: spring-h2-app
+    env: java
+    buildCommand: ./mvnw clean package
+    startCommand: java -jar target/seu-app.jar
+    envVars:
+      - key: PORT
+        value: 8080
