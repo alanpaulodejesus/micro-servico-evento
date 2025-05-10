@@ -1,0 +1,30 @@
+#version: '3.8'
+#services:
+#  mysql:
+#    image: mysql:8
+#    container_name: mysql-evento
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_DATABASE: evento_db
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+#    networks:
+#      - evento-network
+#
+#  app:
+#    build: .
+#    container_name: micro-servico-evento
+#    ports:
+#      - "8083:8083"
+#    networks:
+#      - evento-network
+#    depends_on:
+#      - mysql
+#
+#volumes:
+#  mysql_data:
+#
+#networks:
+#  evento-network:
