@@ -9,5 +9,5 @@ import java.util.List;
 public interface EventoService {
      EventoResponseDTO criarEvento(EventoRequestDTO dto);
      List <EventoResponseDTO> listarEventos();
-
+     void deletarEvento(Integer id);
 }

@@ -33,4 +33,9 @@ public class EventoController {
         return ResponseEntity.ok(eventos);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarEvento(@PathVariable Integer id) {
+        eventoService.deletarEvento(id);
+        return ResponseEntity.ok().build();
+    }
 }
