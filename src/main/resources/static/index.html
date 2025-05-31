@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Cadastro de Evento</title>
-    <!-- Import Materialize CSS -->
+    <!-- Materialize CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
@@ -32,7 +32,7 @@
         <button type="submit" class="btn waves-effect waves-light">Criar Evento</button>
     </form>
 
-    <!-- Área de resposta -->
+    <!-- Área de mensagem -->
     <div id="mensagem"></div>
 
     <!-- Lista de eventos -->
@@ -40,97 +40,126 @@
     <ul id="listaEventos" class="collection z-depth-1"></ul>
 </div>
 
-<!-- Import Materialize JS & jQuery -->
+<!-- Scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
-    // Função para carregar eventos do backend
-    function carregarEventos() {
-        fetch('/evento')
-            .then(res => res.json())
-            .then(data => {
-                const lista = document.getElementById('listaEventos');
-                lista.innerHTML = '';
-
-                if (data.length === 0) {
-                    lista.innerHTML = '<li class="collection-item">Nenhum evento cadastrado.</li>';
-                    return;
-                }
-
-                data.forEach(evento => {
-                    const item = `
-                        <li class="collection-item">
-                            <strong>${evento.nomeEvento}</strong><br>
-                            ${evento.descricaoEvento}<br>
-                            <em>${evento.dataEvento}</em>
-                        </li>`;
-                    lista.innerHTML += item;
-                });
-            })
-            .catch(err => console.error('Erro ao carregar eventos:', err));
-    }
-
-    // Função para exibir a mensagem com fade out
-    function exibirMensagem(texto, sucesso = true) {
-        const mensagemDiv = document.getElementById('mensagem');
-        const cor = sucesso ? 'green' : 'red';
-
-        // Limpa qualquer mensagem anterior
-        mensagemDiv.innerHTML = '';
-
-        // Cria nova div da mensagem
-        const div = document.createElement('div');
-        div.className = `card-panel ${cor} lighten-4`;
-        div.innerHTML = `<span class="${cor}-text text-darken-4">${texto}</span>`;
-        mensagemDiv.appendChild(div);
-
-        // Remove após 4 segundos com fade out
-        setTimeout(() => {
-            div.style.opacity = '1';
-            let op = 1;
-            const fadeOut = setInterval(() => {
-                if (op <= 0.1) {
-                    clearInterval(fadeOut);
-                    div.remove();
-                }
-                div.style.opacity = op;
-                div.style.transition = 'opacity 0.3s';
-                op -= 0.1;
-            }, 30);
-        }, 4000);
-    }
-
-    // Ao carregar a página
     document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('eventoForm');
+        const mensagemDiv = document.getElementById('mensagem');
+
         carregarEventos();
-    });
 
-    // Envio do formulário
-    document.getElementById('eventoForm').addEventListener('submit', function (e) {
-        e.preventDefault();
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
 
-        const nomeEvento = document.getElementById('nomeEvento').value;
-        const descricaoEvento = document.getElementById('descricaoEvento').value;
-        const dataEvento = document.getElementById('dataEvento').value;
+            const nomeEvento = document.getElementById('nomeEvento').value;
+            const descricaoEvento = document.getElementById('descricaoEvento').value;
+            const dataEvento = document.getElementById('dataEvento').value;
 
-        fetch('/evento', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nomeEvento, descricaoEvento, dataEvento })
-        })
-        .then(response => {
-            if (!response.ok) throw new Error("Erro ao criar evento");
-            return response.json();
-        })
-        .then(() => {
-            // Chama a função para exibir a mensagem
-            exibirMensagem('Evento criado com sucesso!', true);
-            document.getElementById('eventoForm').reset();
-            carregarEventos();
-        })
-        .catch(error => {
-            // Chama a função para exibir a mensagem de erro
-            exibirMensagem(`Erro: ${error.message}`, false);
+            const dto = { nomeEvento, descricaoEvento, dataEvento };
+
+            fetch('http://localhost:8080/evento', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dto)
+            })
+            .then(async response => {
+                const data = await response.json();
+                if (!response.ok) {
+                    let msg = data?.message || Object.values(data).join('<br>') || 'Erro ao criar evento.';
+                    throw new Error(msg);
+                }
+
+                exibirMensagem('Evento criado com sucesso!', true);
+                form.reset();
+                carregarEventos();
+            })
+            .catch(error => {
+                exibirMensagem(`Erro: ${error.message}`, false);
+                console.error('Erro capturado:', error);
+            });
         });
+
+        function carregarEventos() {
+            fetch('http://localhost:8080/evento')
+                .then(res => res.json())
+                .then(data => {
+                    const lista = document.getElementById('listaEventos');
+                    lista.innerHTML = '';
+
+                    if (data.length === 0) {
+                        lista.innerHTML = '<li class="collection-item">Nenhum evento cadastrado.</li>';
+                        return;
+                    }
+
+                    data.forEach(evento => {
+                        const item = document.createElement('li');
+                        item.className = 'collection-item';
+                        item.innerHTML = `
+                            <div style="overflow: hidden;">
+                                <div>
+                                    <strong>${evento.nomeEvento}</strong><br>
+                                    ${evento.descricaoEvento}<br>
+                                    <em>${evento.dataEvento}</em>
+                                </div>
+                                <button class="btn red btn-small deletar-evento right" data-id="${evento.id}" style="margin-top: -1px;">Excluir</button>
+                            </div>
+                        `;
+                        lista.appendChild(item);
+                    });
+
+                    // Adiciona eventos de clique aos botões de excluir
+                    document.querySelectorAll('.deletar-evento').forEach(botao => {
+                        botao.addEventListener('click', function () {
+                            const id = this.getAttribute('data-id');
+                            if (confirm('Tem certeza que deseja excluir este evento?')) {
+                                fetch(`http://localhost:8080/evento/${id}`, {
+                                    method: 'DELETE'
+                                })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Erro ao excluir o evento');
+                                    }
+                                    exibirMensagem('Evento excluído com sucesso!', true);
+                                    carregarEventos();
+                                })
+                                .catch(error => {
+                                    exibirMensagem(`Erro ao excluir: ${error.message}`, false);
+                                    console.error(error);
+                                });
+                            }
+                        });
+                    });
+                })
+                .catch(err => {
+                    console.error('Erro ao carregar eventos:', err);
+                    exibirMensagem('Erro ao carregar eventos.', false);
+                });
+        }
+
+        function exibirMensagem(texto, sucesso = true) {
+            const cor = sucesso ? 'green' : 'red';
+            mensagemDiv.innerHTML = '';
+
+            const div = document.createElement('div');
+            div.className = `card-panel ${cor} lighten-4`;
+            div.innerHTML = `<span class="${cor}-text text-darken-4">${texto}</span>`;
+            mensagemDiv.appendChild(div);
+
+            setTimeout(() => {
+                div.style.opacity = '1';
+                let op = 1;
+                const fadeOut = setInterval(() => {
+                    if (op <= 0.1) {
+                        clearInterval(fadeOut);
+                        div.remove();
+                    }
+                    div.style.opacity = op;
+                    div.style.transition = 'opacity 0.3s';
+                    op -= 0.1;
+                }, 30);
+            }, 4000);
+        }
     });
 </script>
 
