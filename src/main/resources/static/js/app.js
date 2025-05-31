@@ -1,4 +1,3 @@
-<script>
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('eventoForm');
     const mensagemDiv = document.getElementById('mensagem');
@@ -23,18 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
             let data = {};
             try {
                 data = await response.json();
-            } catch (e) {
-                // Não há corpo JSON (ex: erro 204 ou corpo vazio)
-            }
+            } catch (e) {}
 
             if (!response.ok) {
-                // Pega a mensagem direta ou concatena mensagens dos erros detalhados
                 let msg = data?.message || (data?.errors ? Object.values(data.errors).join('<br>') : '') || 'Erro ao criar evento.';
                 throw new Error(msg);
             }
-            return data;
-        })
-        .then(data => {
+
             exibirMensagem('Evento criado com sucesso!', true);
             form.reset();
             carregarEventos();
@@ -125,4 +119,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 4000);
     }
 });
-</script>
