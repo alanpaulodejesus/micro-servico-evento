@@ -75,7 +75,7 @@
                 carregarEventos();
             })
             .catch(error => {
-                exibirMensagem(`Erro: ${error.message}`, false);
+                exibirMensagem(`${error.message}`, false);
                 console.error('Erro capturado:', error);
             });
         });
