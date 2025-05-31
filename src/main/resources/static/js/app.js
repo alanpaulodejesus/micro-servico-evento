@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', function () {
+<script>
+document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('eventoForm');
     const mensagemDiv = document.getElementById('mensagem');
 
@@ -19,24 +20,86 @@ document.addEventListener('DOMContentLoaded', function () {
             body: JSON.stringify(dto)
         })
         .then(async response => {
-            const data = await response.json();
-
-            if (!response.ok) {
-                // Tenta pegar mensagem do backend
-                let msg = data?.message || Object.values(data).join('<br>') || 'Erro ao criar evento.';
-                throw new Error(msg);
+            let data = {};
+            try {
+                data = await response.json();
+            } catch (e) {
+                // Não há corpo JSON (ex: erro 204 ou corpo vazio)
             }
 
+            if (!response.ok) {
+                // Pega a mensagem direta ou concatena mensagens dos erros detalhados
+                let msg = data?.message || (data?.errors ? Object.values(data.errors).join('<br>') : '') || 'Erro ao criar evento.';
+                throw new Error(msg);
+            }
+            return data;
+        })
+        .then(data => {
             exibirMensagem('Evento criado com sucesso!', true);
             form.reset();
             carregarEventos();
         })
         .catch(error => {
-            // Mostra mensagem detalhada vinda do backend ou erro de rede
             exibirMensagem(`Erro: ${error.message}`, false);
             console.error('Erro capturado:', error);
         });
     });
+
+    function carregarEventos() {
+        fetch('http://localhost:8080/evento')
+            .then(res => res.json())
+            .then(data => {
+                const lista = document.getElementById('listaEventos');
+                lista.innerHTML = '';
+
+                if (data.length === 0) {
+                    lista.innerHTML = '<li class="collection-item">Nenhum evento cadastrado.</li>';
+                    return;
+                }
+
+                data.forEach(evento => {
+                    const item = document.createElement('li');
+                    item.className = 'collection-item';
+                    item.innerHTML = `
+                        <div style="overflow: hidden;">
+                            <div>
+                                <strong>${evento.nomeEvento}</strong><br>
+                                ${evento.descricaoEvento}<br>
+                                <em>${evento.dataEvento}</em>
+                            </div>
+                            <button class="btn red btn-small deletar-evento right" data-id="${evento.id}" style="margin-top: -1px;">Excluir</button>
+                        </div>
+                    `;
+                    lista.appendChild(item);
+                });
+
+                document.querySelectorAll('.deletar-evento').forEach(botao => {
+                    botao.addEventListener('click', function () {
+                        const id = this.getAttribute('data-id');
+                        if (confirm('Tem certeza que deseja excluir este evento?')) {
+                            fetch(`http://localhost:8080/evento/${id}`, {
+                                method: 'DELETE'
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Erro ao excluir o evento');
+                                }
+                                exibirMensagem('Evento excluído com sucesso!', true);
+                                carregarEventos();
+                            })
+                            .catch(error => {
+                                exibirMensagem(`Erro ao excluir: ${error.message}`, false);
+                                console.error(error);
+                            });
+                        }
+                    });
+                });
+            })
+            .catch(err => {
+                console.error('Erro ao carregar eventos:', err);
+                exibirMensagem('Erro ao carregar eventos.', false);
+            });
+    }
 
     function exibirMensagem(texto, sucesso = true) {
         const cor = sucesso ? 'green' : 'red';
@@ -61,32 +124,5 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 30);
         }, 4000);
     }
-
-    function carregarEventos() {
-        fetch('http://localhost:8080/evento')
-            .then(res => res.json())
-            .then(data => {
-                const lista = document.getElementById('listaEventos');
-                lista.innerHTML = '';
-
-                if (data.length === 0) {
-                    lista.innerHTML = '<li class="collection-item">Nenhum evento cadastrado.</li>';
-                    return;
-                }
-
-                data.forEach(evento => {
-                    const item = `
-                        <li class="collection-item">
-                            <strong>${evento.nomeEvento}</strong><br>
-                            ${evento.descricaoEvento}<br>
-                            <em>${evento.dataEvento}</em>
-                        </li>`;
-                    lista.innerHTML += item;
-                });
-            })
-            .catch(err => {
-                console.error('Erro ao carregar eventos:', err);
-                exibirMensagem('Erro ao carregar eventos.', false);
-            });
-    }
 });
+</script>
