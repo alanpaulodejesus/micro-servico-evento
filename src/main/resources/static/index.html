@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Cadastro de Evento</title>
-    <!-- Materialize CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
@@ -38,6 +37,18 @@
     <!-- Lista de eventos -->
     <h4 class="center-align">Eventos Cadastrados</h4>
     <ul id="listaEventos" class="collection z-depth-1"></ul>
+</div>
+
+<!-- Modal de confirmação -->
+<div id="modalConfirmacao" class="modal">
+    <div class="modal-content">
+        <h4>Confirmar exclusão</h4>
+        <p>Tem certeza que deseja excluir este evento?</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close btn-flat">Cancelar</a>
+        <a href="#!" id="btnConfirmarExclusao" class="btn red confirmar-btn">Excluir</a>
+    </div>
 </div>
 
 <!-- Scripts -->
