@@ -1,6 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('eventoForm');
     const mensagemDiv = document.getElementById('mensagem');
+    const modal = document.getElementById('modalConfirmacao');
+    const confirmarBtn = document.querySelector('.confirmar-btn');
+    let idParaExcluir = null;
+
+    // Inicializa o modal
+    M.Modal.init(modal);
 
     carregarEventos();
 
@@ -69,23 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 document.querySelectorAll('.deletar-evento').forEach(botao => {
                     botao.addEventListener('click', function () {
-                        const id = this.getAttribute('data-id');
-                        if (confirm('Tem certeza que deseja excluir este evento?')) {
-                            fetch(`http://localhost:8080/evento/${id}`, {
-                                method: 'DELETE'
-                            })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Erro ao excluir o evento');
-                                }
-                                exibirMensagem('Evento excluído com sucesso!', true);
-                                carregarEventos();
-                            })
-                            .catch(error => {
-                                exibirMensagem(`Erro ao excluir: ${error.message}`, false);
-                                console.error(error);
-                            });
-                        }
+                        idParaExcluir = this.getAttribute('data-id');
+                        const instanciaModal = M.Modal.getInstance(modal);
+                        instanciaModal.open();
                     });
                 });
             })
@@ -94,6 +86,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 exibirMensagem('Erro ao carregar eventos.', false);
             });
     }
+
+    confirmarBtn.addEventListener('click', () => {
+        if (!idParaExcluir) return;
+
+        fetch(`http://localhost:8080/evento/${idParaExcluir}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Erro ao excluir o evento');
+            exibirMensagem('Evento excluído com sucesso!', true);
+            carregarEventos();
+        })
+        .catch(error => {
+            exibirMensagem(`Erro ao excluir: ${error.message}`, false);
+            console.error(error);
+        })
+        .finally(() => {
+            const instanciaModal = M.Modal.getInstance(modal);
+            instanciaModal.close();
+            idParaExcluir = null;
+        });
+    });
 
     function exibirMensagem(texto, sucesso = true) {
         const cor = sucesso ? 'green' : 'red';
