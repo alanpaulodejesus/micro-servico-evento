@@ -54,4 +54,9 @@ public class EventoServiceImpl implements EventoService {
         eventoRepository.deleteById(id);
     }
 
+    @Override
+    public void deletarEventos() {
+        eventoRepository.deleteAll();
+    }
+
 }

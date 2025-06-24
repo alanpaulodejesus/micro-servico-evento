@@ -38,4 +38,10 @@ public class EventoController {
         eventoService.deletarEvento(id);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping()
+    public ResponseEntity<Void> deletarEventos() {
+        eventoService.deletarEventos();
+        return ResponseEntity.ok().build();
+    }
 }
