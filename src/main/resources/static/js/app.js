@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const API_BASE_URL = window.location.hostname === 'localhost' 
         ? 'http://localhost:8080' 
-        : 'https://sua-api-no-render.onrender.com';
+        : 'https://micro-servico-evento.onrender.com/';
 
     const form = document.getElementById('eventoForm');
     const mensagemDiv = document.getElementById('mensagem');
