@@ -1,15 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-    //const API_BASE_URL = 'http://localhost:8080';
-    const API_BASE_URL = 'https://micro-servico-evento.onrender.com';
-
     const form = document.getElementById('eventoForm');
     const mensagemDiv = document.getElementById('mensagem');
     const modal = document.getElementById('modalConfirmacao');
     const confirmarBtn = document.querySelector('.confirmar-btn');
     let idParaExcluir = null;
 
-  
+    // Inicializa o modal
     M.Modal.init(modal);
 
     carregarEventos();
@@ -23,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const dto = { nomeEvento, descricaoEvento, dataEvento };
 
-        fetch(`${API_BASE_URL}/evento`, {
+        fetch('http://localhost:8080/evento', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dto)
@@ -50,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function carregarEventos() {
-        fetch(`${API_BASE_URL}/evento`)
+        fetch('http://localhost:8080/evento')
             .then(res => res.json())
             .then(data => {
                 const lista = document.getElementById('listaEventos');
@@ -94,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     confirmarBtn.addEventListener('click', () => {
         if (!idParaExcluir) return;
 
-        fetch(`${API_BASE_URL}/evento/${idParaExcluir}`, {
+        fetch(`http://localhost:8080/evento/${idParaExcluir}`, {
             method: 'DELETE'
         })
         .then(response => {

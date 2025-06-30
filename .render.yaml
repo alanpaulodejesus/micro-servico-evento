@@ -3,7 +3,7 @@ services:
     name: spring-h2-app
     env: java
     buildCommand: ./mvnw clean package
-    startCommand: java -jar target/evento-0.0.1-SNAPSHOT.jar
+    startCommand: java -jar target/seu-app.jar
     envVars:
       - key: PORT
         value: 8080
