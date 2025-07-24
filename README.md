@@ -1,27 +1,46 @@
-# micro-servico-evento
+# 📦 micro-servico-evento
 
-Para executar o Projeto é necessário que tenha:
+Este repositório contém o projeto de um microserviço para gerenciamento de eventos, com interface web e documentação via Swagger.
 
-Instalado:
-- Java
+---
+
+## ✅ Pré-requisitos
+
+Antes de executar o projeto, certifique-se de ter os seguintes itens instalados na sua máquina:
+
+- Java (versão 17 ou superior recomendada)
 - Maven
 
-Para executar o projeto:
+---
 
-- Start Spring Boot
+## 🚀 Como executar o projeto
 
-Para acessar aplicação api:
+### 1. Clone o repositório
 
-- http://localhost:8080/evento
+```bash
+git clone https://github.com/seu-usuario/micro-servico-evento.git
+cd micro-servico-evento
+```
 
-Para acessar o Swagger dos endpoints da aplicação:
+### 2. Inicie o Spring Boot
 
-- http://localhost:8080/swagger-ui/index.html
+```bash
+mvn spring-boot:run
+```
 
-Para acessar aplicação web:
+---
 
-- http://localhost:8080/index.html
+## 🌐 Acesso à Aplicação
 
-Para acessar aplicação web no Render:
+### 🔹 API (local)
+- [http://localhost:8080/evento](http://localhost:8080/evento)
 
-- https://micro-servico-evento.onrender.com
+### 🔹 Documentação Swagger (local)
+- [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+
+### 🔹 Interface Web (local)
+- [http://localhost:8080/index.html](http://localhost:8080/index.html)
+
+### 🔹 Interface Web (ambiente em nuvem - Render)
+- [https://micro-servico-evento.onrender.com](https://micro-servico-evento.onrender.com)
+
